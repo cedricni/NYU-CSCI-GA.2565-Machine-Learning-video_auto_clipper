@@ -1,7 +1,7 @@
 from moviepy.editor import VideoFileClip
 import pandas as pd
 import os
-from vidToImg import folder_creation
+from .vidToImg import folder_creation
 
 """
 extract frame number and calculate frame durations from file names
@@ -14,7 +14,7 @@ def frame_duration(meta_data):
 
     meta_data['frame_number'] = meta_data['file_name'].apply(lambda x: int(x.split('_')[1]))
     meta_data['duration'] = 0
-    meta_data = meta_data.sort_values(by='id').sort_values(by='names')
+    meta_data = meta_data.sort_values(by='id').sort_values(by='file_name')
     
     for id, group in meta_data.groupby('id'):
         for idx, row in group.iterrows():
@@ -32,7 +32,7 @@ def frame_duration(meta_data):
                 else:
                     meta_data.at[idx, 'duration'] = 1
 
-    meta_data = meta_data[meta_data["duration"]!=0].drop(columns=['names'])
+    meta_data = meta_data[meta_data["duration"]!=0].drop(columns=['file_name'])
     return meta_data
 
 
