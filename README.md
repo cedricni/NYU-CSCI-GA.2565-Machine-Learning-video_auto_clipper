@@ -15,8 +15,8 @@ pwd: admin
 
 ## Features
 - **Face Recognition**: Automatically identify and extract video segments featuring a specific character.
-- **Action Recognition**: Locate and clip scenes based on particular actions within the video.
 - **Time-saving**: Provides timestamps for each character's appearance to ease the editing process.
+- **(future)Action Recognition**: Locate and clip scenes based on particular actions within the video.
 
 ## Usage
 1. Upload your video file to the app.
