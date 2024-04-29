@@ -4,10 +4,11 @@ import glob
 from PIL import Image
 import unittest
 # import natsort
+import shutil
 
 from clustering.faceCluster import FaceCluster
 from pre_post_processing.vidClips import frame_duration, extract_clip
-
+from pre_post_processing.vidToImg import extract_frames, detect_faces
 
 class clipper_test(unittest.TestCase):
     """
@@ -73,3 +74,32 @@ class clipper_test(unittest.TestCase):
         video_path = './video/input.mp4'
         time_info = frame_duration(cluster_result)
         extract_clip(video_path, time_info, output_dir)
+
+
+    def test_case_clip_cluster_output(self):
+        """
+        Test (2) (3) (4)
+        :return:
+        """
+        video_path = './video/input.mp4'
+        input_file = video_path
+
+        img_output_folder = "imgs"
+        cropped_output_folder = "./test_temp"
+        # extract frames from the video
+        extract_frames(input_file, img_output_folder)
+
+        # detect faces in frames and export cropped faces
+        detect_faces(img_output_folder, cropped_output_folder)
+
+        cluster = FaceCluster()
+        cluster_result = cluster.recognition(cropped_output_folder)
+        logging.info(f"Finished clusering with {len(cluster_result['id'].unique())}")
+
+        output_dir = './test_output'
+        time_info = frame_duration(cluster_result)
+        extract_clip(video_path, time_info, output_dir)
+
+        # Delete cropped
+        shutil.rmtree(cropped_output_folder)
+        shutil.rmtree(img_output_folder)
