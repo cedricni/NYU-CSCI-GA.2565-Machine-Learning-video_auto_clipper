@@ -18,13 +18,13 @@ Try the live app: [Video Auto-clipper](https://vedioautoclipper-n6jcncachknycsul
 
 ## Usage
 1. Upload your video file to the app.
-2. Specify the character or action you wish to clip.
-3. Let the app process the video and provide you with the timestamps and clips.
+2. Click 'Process Video'.
+3. Let the app process the video and provide you with the clips.
 
 ## How It Works
-The app uses [insert technology/algorithms used], enabling it to analyze video content efficiently. Face and action recognition are powered by [insert specific machine learning models or libraries used].
+The app uses [some algorithms], enabling it to analyze video content efficiently. Face and action recognition are powered by [models or libraries used].
 
-## Installation
+## Installation for Local Running
 To run the app locally, follow these steps:
 
 ```bash
