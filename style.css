@@ -1,0 +1,41 @@
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    color: #4a4a4a;
+}
+
+input {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 8px;
+    margin: 10px 0;
+}
+
+button {
+    color: white;
+    background-color: #0068c9;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056a3;
+}
+
+.stTextInput>label, .stPasswordInput>label {
+    font-weight: bold;
+}
+
+.stButton>button {
+    width: 100%;
+    padding: 12px;
+}
+
+.sidebar .sidebar-content {
+    background-color: #f1f1f1;
+    padding: 10px;
+}
