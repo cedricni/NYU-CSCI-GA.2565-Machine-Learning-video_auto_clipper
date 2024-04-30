@@ -1,3 +1,4 @@
+import logging
 import torch
 from PIL import Image
 import os
@@ -7,6 +8,7 @@ from facenet_pytorch import MTCNN, InceptionResnetV1
 
 from sklearn.cluster import estimate_bandwidth, MeanShift
 from collections import defaultdict
+import glob
 from IPython.display import display
 # Initialize face detector
 mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20)
@@ -42,11 +44,11 @@ class FaceCluster(object):
         self.clustering = clustering # clustering method
         self.embeddings = [] # list of embedding codes of images
         self.image_names = [] # list of names of images
+        self.batch_mtcnn = MTCNN(image_size=120, margin=0, min_face_size=20, keep_all=True)
 
     def recognition(self, input_path):
         """
-            args: input_path - directoty that contains all images
-
+            args: input_path - directory that contains all images
             return DataFrame {"id", "file_name"}
         """
         self.image_embedding(input_path)
@@ -74,30 +76,38 @@ class FaceCluster(object):
         })
         return df
 
-    def frame_cropping(self, img_path, save_path=None):
-        mtcnn_c = MTCNN(image_size=160, margin=0, min_face_size=20, keep_all=True)
-        faces = mtcnn_c.forward(Image.open(img_path), save_path=save_path)
+    def single_frame_crop(self, img_path, save_path=None):
+        faces = self.batch_mtcnn.forward(Image.open(img_path), save_path=save_path)
         return faces
 
+    def batch_crop(self, input_dir, output_dir):
+        img_path_list = list(glob.glob(input_dir + '/'+'*.jpg'))
+        for img_path in img_path_list:
+            # print(img_path.split('/'))
+            img_name = img_path.split('/')[-1]
+            # print(img_name)
+            save_path = output_dir + '/' + img_name
+            with Image.open(img_path)as img:
+                res = self.batch_mtcnn.forward(img, save_path=save_path)
+            logging.info(f'cropped {0 if res is None else res.shape[0]} from {img_name}')
 
-
-def cluster_print(df):
-    # Initialize a dictionary to hold the clusters
-    clustered_images = defaultdict(list)
-
-    # Group images by their cluster labels
-    for path, cluster_id in zip(df["file_name"], df["id"]):
-        clustered_images[cluster_id].append(path)
-
-    for cluster in clustered_images:
-        print(cluster)
-        for img_path in clustered_images[cluster]:
-            print(img_path, end=' ')  # Or load and display the image using an image library
-            image_file = Image.open(os.path.join("cropped", img_path))
-            # display(image_file)
-        print(' ')
-
-if __name__ == "__main__":
-    recog = FaceCluster()
-    df = recog.recognition("./cropped")
-    cluster_print(df)
+# def cluster_print(df):
+#     # Initialize a dictionary to hold the clusters
+#     clustered_images = defaultdict(list)
+#
+#     # Group images by their cluster labels
+#     for path, cluster_id in zip(df["file_name"], df["id"]):
+#         clustered_images[cluster_id].append(path)
+#
+#     for cluster in clustered_images:
+#         print(cluster)
+#         for img_path in clustered_images[cluster]:
+#             print(img_path, end=' ')  # Or load and display the image using an image library
+#             image_file = Image.open(os.path.join("cropped", img_path))
+#             # display(image_file)
+#         print(' ')
+#
+# if __name__ == "__main__":
+#     recog = FaceCluster()
+#     df = recog.recognition("./cropped")
+#     cluster_print(df)

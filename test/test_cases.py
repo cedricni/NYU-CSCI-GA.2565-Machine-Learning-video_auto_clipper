@@ -11,6 +11,8 @@ from clustering.clipper import Clipper
 from pre_post_processing.vidClips import frame_duration, extract_clip
 from pre_post_processing.vidToImg import extract_frames, detect_faces
 
+
+logging.basicConfig(level=logging.INFO)
 class clipper_test(unittest.TestCase):
     """
     The clipper is involved with 4 phases:
@@ -40,17 +42,10 @@ class clipper_test(unittest.TestCase):
         img_names = list(glob.glob("./cropped" + '/'+'*.jpg'))
         save_folder = './tmp/mtcnn_crop'
         for img_path in img_names:
-            res = cluster.frame_cropping(img_path, save_path=save_folder +'/' + img_path.split('/')[2])
+            res = cluster.single_frame_crop(img_path, save_path=save_folder + '/' + img_path.split('/')[2])
             if res is None:
                 continue
             print(res.shape)
-
-    def test_case_multiface(self):
-        cluster = FaceCluster()
-        img_path = '../resource/multi_face_photo.jpeg'
-        save_folder = './tmp/mtcnn_crop'
-        res = cluster.frame_cropping(img_path, save_path=save_folder + '/' + 'multi.png')
-        print(res.shape)
 
     def test_case_clipper_process(self):
         """
@@ -71,7 +66,7 @@ class clipper_test(unittest.TestCase):
         logging.info(f"Finished clusering with {len(cluster_result['id'].unique())}")
 
         output_dir = './test_output'
-        video_path = './video/input.mp4'
+        video_path = '../resource/video/input.mp4'
         time_info = frame_duration(cluster_result)
         extract_clip(video_path, time_info, output_dir)
 
@@ -81,7 +76,7 @@ class clipper_test(unittest.TestCase):
         Test (2) (3) (4)
         :return:
         """
-        video_path = './video/input.mp4'
+        video_path = '../resource/video/input.mp4'
         input_file = video_path
 
         img_output_folder = "imgs"
@@ -104,10 +99,28 @@ class clipper_test(unittest.TestCase):
         # shutil.rmtree(cropped_output_folder)
         # shutil.rmtree(img_output_folder)
 
-    def test_case_clipper(self):
+    def test_case_multiface(self):
+        """
+        Test cropping images with multiple faces.
+        :return:
+        """
+        cluster = FaceCluster()
+        img_path = '../resource/multi_face_photo.jpeg'
+        save_folder = './tmp/mtcnn_crop'
+        res = cluster.single_frame_crop(img_path, save_path=save_folder + '/' + 'multi.png')
+        print(res.shape)
+
+    def test_case_crop_dir(self):
+        cluster = FaceCluster()
+        img_dir = '../resource/frames'
+        output_dir = './tmp/batch_crop'
+        cluster.batch_crop(img_dir, output_dir)
+
+    def test_main(self):
         cliper = Clipper()
-        input_path = './video/input.mp4'
+        input_path = '../resource/video/input.mp4'
         output_dir = './test_output'
         cliper.clip(input_path, output_dir)
+
 
 
