@@ -2,7 +2,6 @@ from moviepy.editor import VideoFileClip
 import pandas as pd
 import os
 from .vidToImg import folder_creation
-import natsort
 
 """
 extract frame number and calculate frame durations from file names
@@ -16,7 +15,7 @@ def frame_duration(meta_data):
     meta_data['frame_number'] = meta_data['file_name'].apply(lambda x: int(x.split('_')[1]))
     meta_data['duration'] = 0
     # meta_data = meta_data.sort_values(by='id').sort_values(by='file_name')
-    meta_data = meta_data.sort_values(by=['id', 'frame_number'])
+    meta_data = meta_data.sort_values(by=['id', 'frame_number'], ignore_index=True)
 
     for id, group in meta_data.groupby('id'):
         for idx, row in group.iterrows():
@@ -52,9 +51,13 @@ def extract_clip(input_file, time_info, vid_output_folder):
 
     for idx, row in time_info.iterrows():
         id = row['id']
-        start = row['frame_number']
+        end = row['frame_number']
         duration = row['duration']
-        end = start+duration-0.5
+        if end == 0:
+            start = 0
+            end = duration
+        else:
+            start = end - duration
 
         output_path = os.path.join(vid_output_folder, f"{id}_{duration}_{start}.mp4")
 
