@@ -7,6 +7,7 @@ import unittest
 import shutil
 
 from clustering.faceCluster import FaceCluster
+from clustering.clipper import Clipper
 from pre_post_processing.vidClips import frame_duration, extract_clip
 from pre_post_processing.vidToImg import extract_frames, detect_faces
 
@@ -101,5 +102,11 @@ class clipper_test(unittest.TestCase):
         extract_clip(video_path, time_info, output_dir)
 
         # Delete cropped
-        shutil.rmtree(cropped_output_folder)
-        shutil.rmtree(img_output_folder)
+        # shutil.rmtree(cropped_output_folder)
+        # shutil.rmtree(img_output_folder)
+
+    def test_case_clipper(self):
+        cliper = Clipper()
+        input_path = './video/input.mp4'
+        output_dir = './test_output'
+        cliper.clip(input_path, output_dir)

@@ -55,7 +55,7 @@ def extract_clip(input_file, time_info, vid_output_folder):
         duration = row['duration']
         end = start+duration-0.5
 
-        output_path = os.path.join(vid_output_folder, f"{id}_{duration}.mp4")
+        output_path = os.path.join(vid_output_folder, f"{id}_{duration}_{idx}.mp4")
 
         clip = video.subclip(start, end)
         clip.write_videofile(output_path, codec="libx264")

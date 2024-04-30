@@ -6,7 +6,8 @@ import pandas as pd
 from facenet_pytorch import MTCNN, InceptionResnetV1
 
 from sklearn.cluster import estimate_bandwidth, MeanShift
-
+from collections import defaultdict
+from IPython.display import display
 # Initialize face detector
 mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20)
 
@@ -75,8 +76,7 @@ class FaceCluster(object):
         return df
 
 
-from collections import defaultdict
-from IPython.display import display
+
 
 def cluster_print(df):
     # Initialize a dictionary to hold the clusters
