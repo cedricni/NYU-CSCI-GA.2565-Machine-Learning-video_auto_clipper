@@ -5,7 +5,7 @@ from PIL import Image
 import unittest
 # import natsort
 import shutil
-
+from torchvision.transforms import ToPILImage
 from clustering.faceCluster import FaceCluster
 from clustering.clipper import Clipper
 from pre_post_processing.vidClips import frame_duration, extract_clip
@@ -17,7 +17,7 @@ class clipper_test(unittest.TestCase):
     (1)Video Input (2) Cropping (3) Clustering (4) Clipping
     The test cases covers the whole process
     """
-    def test_case_cluser(self):
+    def test_case_cluster(self):
         """
         Covers (3)
         :return:
@@ -34,24 +34,18 @@ class clipper_test(unittest.TestCase):
         cluster = FaceCluster()
         result = cluster.recognition("./cropped")
         print(result)
-        # true_labels = [
-        #     0, 1, 2, 3, 4, 0,
-        #     0, 0, 0, 0, 0, 0,
-        #     0, 0, 5, 0, 0, 6,
-        #     7, 8, 9, 10, 2, 11,
-        #     7, 12, 0, 0, 0, 13,
-        #     0, 2, 0, 8, 2, 2,
-        #     8, 1, 1, 14, 14, 0,
-        #     15, 15, 8, 8, 8, 0,
-        #     0, 16, 16, 0, 0, 0,
-        #     1, 1, 1, 1, 0, 0,
-        #     0, 0, 0, 17, 17, 0,
-        #     0, 14, 0, 0, 17, 18,
-        #     19, 0, 20, 2, 21, 22,
-        #     23, 24, 7, 8, 2, 13,
-        #     13, 0, 0, 0, 0, 8,
-        #     8
-        # ]
+
+    def test_mtcnn_cropping(self):
+        cluster = FaceCluster()
+        img_names = list(glob.glob("./cropped" + '/'+'*.jpg'))
+        save_folder = './tmp/mtcnn_crop'
+        for img_path in img_names:
+            res = cluster.frame_cropping(img_path, save_path=save_folder +'/' + img_path.split('/')[2])
+            if res is None:
+                continue
+            print(res.shape)
+            # if res.shape[0] == 1:
+            #     break
 
     def test_case_clipper_process(self):
         """

@@ -52,7 +52,6 @@ class FaceCluster(object):
         self.image_embedding(input_path)
         clusters = self.clustering(self.embeddings)
         return self.cluster_process(clusters)
-        
 
     def image_embedding(self, directory_path):
         """
@@ -75,6 +74,10 @@ class FaceCluster(object):
         })
         return df
 
+    def frame_cropping(self, img_path, save_path=None):
+        mtcnn_c = MTCNN(image_size=160, margin=0, min_face_size=20, keep_all=True)
+        faces = mtcnn_c.forward(Image.open(img_path), save_path=save_path)
+        return faces
 
 
 
