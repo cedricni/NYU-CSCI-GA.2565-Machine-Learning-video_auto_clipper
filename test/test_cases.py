@@ -44,8 +44,13 @@ class clipper_test(unittest.TestCase):
             if res is None:
                 continue
             print(res.shape)
-            # if res.shape[0] == 1:
-            #     break
+
+    def test_case_multiface(self):
+        cluster = FaceCluster()
+        img_path = '../resource/multi_face_photo.jpeg'
+        save_folder = './tmp/mtcnn_crop'
+        res = cluster.frame_cropping(img_path, save_path=save_folder + '/' + 'multi.png')
+        print(res.shape)
 
     def test_case_clipper_process(self):
         """
@@ -104,3 +109,5 @@ class clipper_test(unittest.TestCase):
         input_path = './video/input.mp4'
         output_dir = './test_output'
         cliper.clip(input_path, output_dir)
+
+
