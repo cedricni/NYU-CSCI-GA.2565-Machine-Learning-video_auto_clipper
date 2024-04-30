@@ -4,8 +4,8 @@
 The Video Auto-clipper App is a Streamlit-based application designed for automating the process of locating and clipping specific characters or actions in video files. Developed as part of the NYU CSCI-GA 2565 Machine Learning course, this app utilizes advanced machine learning techniques for face and action recognition to streamline video editing.
 
 Try the live app: [Video Auto-clipper](https://vedioautoclipper-n6jcncachknycsullwmsot.streamlit.app/)
-username: admin
-pwd: admin
+- username: admin
+- pwd: admin
 
 ## Team Members
 - Lubin Sun
