@@ -79,6 +79,7 @@ def detect_faces(folder_path, output_folder):
             if len(faces) > 0:
                 for i, (x, y, w, h) in enumerate(faces):
                     face = frame[y:y+h, x:x+w]
+                    face = cv2.resize(face, (160, 160))
                     face_output_path = os.path.join(output_folder, f"{filename}")
                     cv2.imwrite(face_output_path, face)
     print("face cropping export completed.")

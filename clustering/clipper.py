@@ -22,7 +22,7 @@ class Clipper:
         # detect faces in frames and export cropped faces
         detect_faces(img_output_folder, cropped_output_folder)
         # Alternative approach: use mtcnn
-        # self.cluster.batch_crop(img_output_folder, cropped_output_folder)
+        # self.cluster.batch_crop(img_output_folder, cropped_output_folder, keep_all=False)
 
         cluster_result = self.cluster.recognition(cropped_output_folder)
 

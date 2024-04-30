@@ -44,7 +44,7 @@ class FaceCluster(object):
         self.clustering = clustering # clustering method
         self.embeddings = [] # list of embedding codes of images
         self.image_names = [] # list of names of images
-        self.batch_mtcnn = MTCNN(image_size=120, margin=0, min_face_size=20, keep_all=True)
+        self.batch_mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20, keep_all=True)
 
     def recognition(self, input_path):
         """
@@ -80,7 +80,8 @@ class FaceCluster(object):
         faces = self.batch_mtcnn.forward(Image.open(img_path), save_path=save_path)
         return faces
 
-    def batch_crop(self, input_dir, output_dir):
+    def batch_crop(self, input_dir, output_dir, keep_all=True):
+        batch_mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20, keep_all=keep_all)
         img_path_list = list(glob.glob(input_dir + '/'+'*.jpg'))
         for img_path in img_path_list:
             # print(img_path.split('/'))
@@ -88,8 +89,9 @@ class FaceCluster(object):
             # print(img_name)
             save_path = output_dir + '/' + img_name
             with Image.open(img_path)as img:
-                res = self.batch_mtcnn.forward(img, save_path=save_path)
-            logging.info(f'cropped {0 if res is None else res.shape[0]} from {img_name}')
+                res = batch_mtcnn.forward(img, save_path=save_path)
+            if keep_all:
+                logging.info(f'cropped {0 if res is None else res.shape[0]} from {img_name}')
 
 # def cluster_print(df):
 #     # Initialize a dictionary to hold the clusters
