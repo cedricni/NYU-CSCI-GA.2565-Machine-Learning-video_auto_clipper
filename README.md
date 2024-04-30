@@ -32,5 +32,5 @@ To run the app locally, follow these steps:
 ```bash
 git clone [repository-link]
 cd [repository-name]
-pip install -r requirements.txt
+pip install -r requirements.txt # and all other libraries you may be missing
 streamlit run app.py
