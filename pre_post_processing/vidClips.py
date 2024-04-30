@@ -1,7 +1,8 @@
 from moviepy.editor import VideoFileClip
 import pandas as pd
 import os
-from vidToImg import folder_creation
+from .vidToImg import folder_creation
+import natsort
 
 """
 extract frame number and calculate frame durations from file names
@@ -14,13 +15,13 @@ def frame_duration(meta_data):
 
     meta_data['frame_number'] = meta_data['file_name'].apply(lambda x: int(x.split('_')[1]))
     meta_data['duration'] = 0
-    meta_data = meta_data.sort_values(by='id').sort_values(by='names')
-    
+    # meta_data = meta_data.sort_values(by='id').sort_values(by='file_name')
+    meta_data = meta_data.sort_values(by=['id', 'frame_number'])
+
     for id, group in meta_data.groupby('id'):
         for idx, row in group.iterrows():
             if idx==0:
                 if row['frame_number']+1 != meta_data.at[idx + 1, 'frame_number']:
-                    print('test')
                     meta_data.at[idx, 'duration'] = 1
                 else:
                     meta_data.at[idx, 'duration'] = 0
@@ -32,7 +33,7 @@ def frame_duration(meta_data):
                 else:
                     meta_data.at[idx, 'duration'] = 1
 
-    meta_data = meta_data[meta_data["duration"]!=0].drop(columns=['names'])
+    meta_data = meta_data[meta_data["duration"]!=0].drop(columns=['file_name'])
     return meta_data
 
 
@@ -55,7 +56,7 @@ def extract_clip(input_file, time_info, vid_output_folder):
         duration = row['duration']
         end = start+duration-0.5
 
-        output_path = os.path.join(vid_output_folder, f"{id}_{duration}.mp4")
+        output_path = os.path.join(vid_output_folder, f"{id}_{duration}_{start}.mp4")
 
         clip = video.subclip(start, end)
         clip.write_videofile(output_path, codec="libx264")
@@ -75,6 +76,5 @@ if __name__ == "__main__":
                                        "vid-img/cropped/frame_95_95011.jpg",
                                        ]})
     vid_output_folder = "vids"
-
     time_info = frame_duration(meta_data)
     extract_clip(input_file, time_info, vid_output_folder)
